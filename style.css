@@ -65,8 +65,11 @@ gap:12px;
 .topic-list{
 display:flex;
 flex-direction:column;
-gap:12px;
-max-width:220px;
+gap:14px;
+align-items:center;
+justify-content:center;
+margin:auto;
+width:220px;
 }
 .option{
 width:100%;
