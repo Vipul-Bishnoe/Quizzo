@@ -4,108 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz Portal</title>
-
-<style>
-:root{
-    --bg:#eef2f7;
-    --text:#1f2937;
-    --primary:#2563eb;
-    --accent:#10b981;
-    --border:#e5e7eb;
-    --hover:#2563eb;
-}
-body.dark{
-    --bg:#0b1220;
-    --text:#f1f5f9;
-    --primary:#3b82f6;
-    --accent:#22c55e;
-    --border:#475569;
-    --hover:#334155;
-}
-body{
-    margin:0;
-    font-family:Segoe UI,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-}
-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:16px 40px;
-    background:var(--primary);
-    color:#fff;
-}
-.theme-btn{
-    background:#fff;
-    color:#000;
-    font-size:18px;
-    padding:6px 12px;
-    border-radius:8px;
-    border:none;
-    cursor:pointer;
-}
-main{
-    flex:1;
-    width:90%;
-    max-width:1200px;
-    margin:auto;
-    padding:40px 10px;
-}
-.question{
-    font-size:22px;
-    margin-bottom:20px;
-}
-.options{
-    display:grid;
-    gap:12px;
-}
-.option{
-    width:100%;
-    padding:14px;
-    font-size:16px;
-    text-align:left;
-    border-radius:8px;
-    border:1px solid var(--border);
-    background:transparent;
-    color:var(--text);
-    cursor:pointer;
-}
-.option:hover{
-    background:var(--hover);
-    color:#fff;
-}
-.primary{
-    background:var(--primary);
-    color:#fff;
-    padding:12px 18px;
-    border-radius:8px;
-    border:none;
-    font-size:16px;
-    cursor:pointer;
-}
-input{
-    width:300px;
-    padding:10px;
-    border-radius:8px;
-    border:1px solid var(--border);
-}
-.timer{
-    font-weight:bold;
-    color:var(--accent);
-    margin-bottom:20px;
-}
-footer{
-    text-align:center;
-    padding:15px;
-    border-top:1px solid var(--border);
-    background:var(--bg);
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
+
+<body>
+
+<header>
+<h2>Quiz Portal</h2>
+<button class="theme-btn" onclick="toggleTheme()" id="themeIcon">🌙</button>
+</header>
+
+<main id="app"></main>
+
+<footer>
+© 2026 Vipul Bishnoi
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html></head>
 
 <body>
 
