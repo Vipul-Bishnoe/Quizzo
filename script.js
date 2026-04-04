@@ -89,8 +89,14 @@ clearInterval(timer);
 timeLeft=30;
 
 timer=setInterval(()=>{
+
 timeLeft--;
-document.getElementById("timerBox").innerText="Time Left: "+timeLeft+" sec";
+
+let timerBox=document.getElementById("timerBox");
+
+if(timerBox){
+timerBox.innerText="Time Left: "+timeLeft+" sec";
+}
 
 if(timeLeft<=0){
 clearInterval(timer);
