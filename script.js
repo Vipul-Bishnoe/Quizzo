@@ -98,9 +98,30 @@ ${opts.map((v,i)=>`<button class="option" onclick="checkAnswer(${i})">${v}</butt
 </div>`;
 }
 
-function checkAnswer(c){
-if(c===questions[index].correctIndex)score++;
-index++;showQuestion();
+function checkAnswer(selectedIndex){
+
+let buttons=document.querySelectorAll(".option");
+let correctIndex=questions[index].correctIndex;
+buttons.forEach(btn=>btn.disabled=true);
+buttons.forEach((btn,i)=>{
+
+if(i===correctIndex){
+btn.style.background="green";
+btn.style.color="#fff";
+}
+
+if(i===selectedIndex && selectedIndex!==correctIndex){
+btn.style.background="red";
+btn.style.color="#fff";
+}
+
+});
+if(selectedIndex===correctIndex) score++;
+setTimeout(()=>{
+index++;
+showQuestion();
+},1000);
+
 }
 
 function showResult(){
