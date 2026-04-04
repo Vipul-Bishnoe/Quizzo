@@ -31,7 +31,7 @@ css:[
 {q:"Font Size Property Is _____ ?",o:["Font-style","Text-size","Font-size","Size"],a:2},
 {q:"Default Position Value Is _____ ?",o:["Static","Relative","Absolute","Fixed"],a:0},
 {q:"Space Inside Border Is Called _____ ?",o:["Margin","Padding","Border","Spacing"],a:1},
-{q:"CSS Comment Syntax Is _____ ?",o:["// Comment","&lt;!-- Comment --&gt;","/* Comment */","# Comment"],a:2},
+{q:"CSS Comment Syntax Is _____ ?",o:["// Comment","< !-- Comment -- >","/* Comment */","# Comment"],a:2},
 {q:"Bold Text Property Is _____ ?",o:["Font-bold","Text-bold","Font-weight:bold","Weight:bold"],a:2}
 ],
 
@@ -106,6 +106,156 @@ topic==="fusion"
 :[...db[topic]];
 
 questions=shuffle(questions);
+
+index=0;
+score=0;
+userAnswers=[];
+timeLeft=30;
+
+startTime=new Date();
+
+clearInterval(timer);
+
+timer=setInterval(()=>{
+
+timeLeft--;
+
+let box=document.getElementById("timerBox");
+
+if(box) box.innerText="Time Left: "+timeLeft+" sec";
+
+if(timeLeft<=0){
+
+clearInterval(timer);
+showResult();
+
+}
+
+},1000);
+
+showQuestion();
+
+}
+
+function showQuestion(){
+
+if(index>=questions.length){
+
+clearInterval(timer);
+return showResult();
+
+}
+
+let q=questions[index];
+
+app.innerHTML=`
+
+<h2>${userName} | Question ${index+1} of 10</h2>
+
+<div class="timer" id="timerBox">
+
+Time Left: ${timeLeft} sec
+
+</div>
+
+<div class="question">
+
+${index+1}. ${q.q}
+
+</div>
+
+<div class="options">
+
+${q.o.map((v,i)=>
+`<button class="option"
+onclick="checkAnswer(${i})">${v}</button>`
+).join("")}
+
+</div>
+
+`;
+
+}
+
+function checkAnswer(selected){
+
+userAnswers.push(selected);
+
+if(selected===questions[index].a)
+score++;
+
+index++;
+
+showQuestion();
+
+}
+
+function showResult(){
+
+clearInterval(timer);
+
+let accuracy=(score/10)*100;
+
+let reviewHTML="";
+
+questions.forEach((q,i)=>{
+
+let user=userAnswers[i];
+let correct=q.a;
+
+reviewHTML+=`
+
+<div class="result-card">
+
+<b>Q${i+1}:</b> ${q.q}<br><br>
+
+Your Answer:
+<span class="${user===correct?"correct":"wrong"}">
+${q.o[user]||"Not Attempted"}
+</span>
+
+<br>
+
+Correct Answer:
+<span class="correct">
+${q.o[correct]}
+</span>
+
+</div>
+
+`;
+
+});
+
+app.innerHTML=`
+
+<div class="result-wrapper">
+
+<h1>Result Summary</h1>
+
+<br>
+
+Name: ${userName}<br><br>
+
+Score: ${score}/10<br><br>
+
+Accuracy: ${accuracy.toFixed(2)}%<br><br>
+
+${reviewHTML}
+
+<br>
+
+<button class="primary" onclick="home()">
+Restart Quiz
+</button>
+
+</div>
+
+`;
+
+}
+
+home();questions=shuffle(questions);
 
 index=0;
 score=0;
