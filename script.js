@@ -1,6 +1,14 @@
-let userName="",questions=[],index=0,score=0,timer,timeLeft=30,startTime;
+let userName="";
+let questions=[];
+let index=0;
+let score=0;
+let timer;
+let timeLeft=30;
+let startTime;
+let userAnswers=[];
 
 const db={
+
 html:[
 {q:"HTML Stands For _____ ?",o:["HyperText Machine Language","HyperText Markup Language","HyperText Marking Language","HighText Marking Language"],a:1},
 {q:"Closing Tag Symbol Is _____ ?",o:["!","\\","/","."],a:2},
@@ -13,6 +21,7 @@ html:[
 {q:"Main Tag Defines _____ ?",o:["Footer Section","Main Content Area","Header Section","Navigation Menu"],a:1},
 {q:"Select Tag Creates _____ ?",o:["Textbox","Dropdown List","Button","Heading"],a:1}
 ],
+
 css:[
 {q:"CSS Stands For _____ ?",o:["Computer Style Sheets","Creative Style Sheets","Cascading Style Sheets","Colorful Style Sheets"],a:2},
 {q:"Internal Stylesheet Uses Style Tag Inside _____ Section ?",o:["Head","Body","Footer","Title"],a:0},
@@ -25,6 +34,7 @@ css:[
 {q:"CSS Comment Syntax Is _____ ?",o:["// Comment","&lt;!-- Comment --&gt;","/* Comment */","# Comment"],a:2},
 {q:"Bold Text Property Is _____ ?",o:["Font-bold","Text-bold","Font-weight:bold","Weight:bold"],a:2}
 ],
+
 js:[
 {q:"Assignment Operator Is _____ ?",o:["*","-","=","X"],a:2},
 {q:"Keyword For Constant Variable Is _____ ?",o:["Constant","Var","Let","Const"],a:3},
@@ -37,75 +47,218 @@ js:[
 {q:"5 > 10 Returns _____ ?",o:["True","False","Undefined","Null"],a:1},
 {q:"Logical AND Operator Is _____ ?",o:["&","||","&&","!"],a:2}
 ]
+
 };
 
 const shuffle=a=>a.sort(()=>Math.random()-.5);
 
 function toggleTheme(){
+
 document.body.classList.toggle("dark");
-themeIcon.innerText=document.body.classList.contains("dark")?"☀️":"🌙";
+
+themeIcon.innerText=
+document.body.classList.contains("dark")?"☀️":"🌙";
+
 }
 
 function home(){
+
 app.innerHTML=`
-<h2 style="text-align:center;">Enter Your Name :</h2><br>
+
+<h2 style="text-align:center;">Enter Your Name :</h2>
+
+<br>
 
 <div style="display:flex;justify-content:center;">
+
 <input id="name" placeholder="Your name">
+
 </div>
 
 <br>
 
-<h2 style="text-align:center;">Select Topic :</h2><br>
+<h2 style="text-align:center;">Select Topic :</h2>
+
+<br>
 
 <div class="topic-list">
+
 <button class="primary" onclick="startQuiz('html')">HTML</button>
 <button class="primary" onclick="startQuiz('css')">CSS</button>
 <button class="primary" onclick="startQuiz('js')">JavaScript</button>
 <button class="primary" onclick="startQuiz('fusion')">Fusion (Mixed)</button>
+
 </div>
+
 `;
+
 }
+
 function startQuiz(topic){
-userName=document.getElementById("name").value.trim() || "Guest";
-questions=topic==="fusion"
-?[...db.html.slice(0,3),...db.css.slice(0,3),...db.js.slice(0,4)]
+
+userName=document.getElementById("name").value.trim()||"Guest";
+
+questions=
+topic==="fusion"
+?[...db.html.slice(0,3),
+...db.css.slice(0,3),
+...db.js.slice(0,4)]
 :[...db[topic]];
 
 questions=shuffle(questions);
-index=0;score=0;startTime=new Date();timeLeft=30;
+
+index=0;
+score=0;
+userAnswers=[];
+timeLeft=30;
+
+startTime=new Date();
+
+clearInterval(timer);
 
 timer=setInterval(()=>{
+
 timeLeft--;
-timerBox.innerText="Time Left: "+timeLeft+" sec";
-if(timeLeft<=0){clearInterval(timer);showResult();}
+
+let box=document.getElementById("timerBox");
+
+if(box) box.innerText="Time Left: "+timeLeft+" sec";
+
+if(timeLeft<=0){
+
+clearInterval(timer);
+showResult();
+
+}
+
 },1000);
 
 showQuestion();
+
 }
 
 function showQuestion(){
+
+if(index>=questions.length){
+
 clearInterval(timer);
-timeLeft=30;
+return showResult();
 
-timer=setInterval(()=>{
-
-timeLeft--;
-
-let timerBox=document.getElementById("timerBox");
-
-if(timerBox){
-timerBox.innerText="Time Left: "+timeLeft+" sec";
 }
 
-if(timeLeft<=0){
-clearInterval(timer);
-showResult();
+let q=questions[index];
+
+app.innerHTML=`
+
+<h2>${userName} | Question ${index+1} of 10</h2>
+
+<div class="timer" id="timerBox">
+
+Time Left: ${timeLeft} sec
+
+</div>
+
+<div class="question">
+
+${index+1}. ${q.q}
+
+</div>
+
+<div class="options">
+
+${q.o.map((v,i)=>
+`<button class="option"
+onclick="checkAnswer(${i})">${v}</button>`
+).join("")}
+
+</div>
+
+`;
+
 }
 
-},1000);
-if(index>=questions.length){clearInterval(timer);return showResult();}
-let q=questions[index],opts=shuffle([...q.o]);
+function checkAnswer(selected){
+
+userAnswers.push(selected);
+
+if(selected===questions[index].a)
+score++;
+
+index++;
+
+showQuestion();
+
+}
+
+function showResult(){
+
+clearInterval(timer);
+
+let accuracy=(score/10)*100;
+
+let reviewHTML="";
+
+questions.forEach((q,i)=>{
+
+let user=userAnswers[i];
+
+let correct=q.a;
+
+reviewHTML+=`
+
+<div class="result-card">
+
+<b>Q${i+1}:</b> ${q.q}<br><br>
+
+Your Answer:
+<span class="${user===correct?"correct":"wrong"}">
+
+${q.o[user]||"Not Attempted"}
+
+</span>
+
+<br>
+
+Correct Answer:
+<span class="correct">
+
+${q.o[correct]}
+
+</span>
+
+</div>
+
+`;
+
+});
+
+app.innerHTML=`
+
+<h1>Result Summary</h1>
+
+<br>
+
+Name: ${userName}<br><br>
+
+Score: ${score}/10<br><br>
+
+Accuracy: ${accuracy.toFixed(2)}%<br><br>
+
+${reviewHTML}
+
+<br>
+
+<button class="primary" onclick="home()">
+
+Restart Quiz
+
+</button>
+
+`;
+
+}
+
+home();let q=questions[index],opts=shuffle([...q.o]);
 q.correctIndex=opts.indexOf(q.o[q.a]);
 
 app.innerHTML=`
