@@ -1,87 +1,88 @@
-const app = document.getElementById("app");
-const themeIcon = document.getElementById("themeIcon");
+const app=document.getElementById("app");
+const themeBtn=document.getElementById("themeBtn");
+
+/* THEME TOGGLE */
+
+themeBtn.onclick=()=>{
+document.body.classList.toggle("dark");
+themeBtn.textContent=
+document.body.classList.contains("dark")?"☀️":"🌙";
+};
+
 let userName="";
 let questions=[];
 let index=0;
 let score=0;
 let timer;
 let timeLeft=30;
-let startTime;
 let userAnswers=[];
+
+/* DATABASE */
 
 const db={
 
 html:[
-{q:"HTML Stands For _____ ?",o:["HyperText Machine Language","HyperText Markup Language","HyperText Marking Language","HighText Marking Language"],a:1},
-{q:"Closing Tag Symbol Is _____ ?",o:["!","\\","/","."],a:2},
-{q:"H1 Tag Is Used For _____ ?",o:["Largest Heading","Paragraph","Image","Link"],a:0},
-{q:"Br Tag Is Used To Insert _____ ?",o:["Line Break","Heading","Image","Table"],a:0},
-{q:"Href Attribute Is Used In A Tag For _____ ?",o:["Creating Hyperlink","Creating Table","Creating Form","Creating Paragraph"],a:0},
-{q:"Alt Attribute Is Used With Image Tag For _____ ?",o:["Alternative Text","Table Border","Form Label","List Style"],a:0},
-{q:"Ul Tag Creates _____ ?",o:["Ordered List","Unordered List","Row","Heading"],a:1},
-{q:"Tr Tag Represents _____ ?",o:["Table Row","Table Column","Table Head","Table Border"],a:0},
-{q:"Main Tag Defines _____ ?",o:["Footer Section","Main Content Area","Header Section","Navigation Menu"],a:1},
-{q:"Select Tag Creates _____ ?",o:["Textbox","Dropdown List","Button","Heading"],a:1}
+{q:"HTML Stands For ?",o:["HyperText Machine Language","HyperText Markup Language","HyperText Marking Language","HighText Marking Language"],a:1},
+{q:"Closing Tag Symbol ?",o:["!","\\","/","."],a:2},
+{q:"Largest Heading Tag ?",o:["h6","h1","head","title"],a:1},
+{q:"Line Break Tag ?",o:["br","lb","break","hr"],a:0},
+{q:"Hyperlink Attribute ?",o:["href","src","link","ref"],a:0},
+{q:"Image Alternative Text ?",o:["title","alt","src","href"],a:1},
+{q:"Unordered List Tag ?",o:["ol","ul","li","dl"],a:1},
+{q:"Table Row Tag ?",o:["td","th","tr","row"],a:2},
+{q:"Main Content Tag ?",o:["header","footer","main","nav"],a:2},
+{q:"Dropdown Tag ?",o:["input","select","option","textarea"],a:1}
 ],
 
 css:[
-{q:"CSS Stands For _____ ?",o:["Computer Style Sheets","Creative Style Sheets","Cascading Style Sheets","Colorful Style Sheets"],a:2},
-{q:"Internal Stylesheet Uses Style Tag Inside _____ Section ?",o:["Head","Body","Footer","Title"],a:0},
-{q:"Paragraph Text Color Syntax Is _____ ?",o:["P {color:black;}","P=color:black","{P:black}","Color:P:black"],a:0},
-{q:"Background Color Property Is _____ ?",o:["Color","Bgcolor","Background-color","Background-style"],a:2},
-{q:"ID Selector Starts With _____ ?",o:[".","#","*","@"],a:1},
-{q:"Font Size Property Is _____ ?",o:["Font-style","Text-size","Font-size","Size"],a:2},
-{q:"Default Position Value Is _____ ?",o:["Static","Relative","Absolute","Fixed"],a:0},
-{q:"Space Inside Border Is Called _____ ?",o:["Margin","Padding","Border","Spacing"],a:1},
-{q:"CSS Comment Syntax Is _____ ?",o:["// Comment","< !-- Comment -- >","/* Comment */","# Comment"],a:2},
-{q:"Bold Text Property Is _____ ?",o:["Font-bold","Text-bold","Font-weight:bold","Weight:bold"],a:2}
+{q:"CSS Stands For ?",o:["Computer Style Sheets","Creative Style Sheets","Cascading Style Sheets","Colorful Style Sheets"],a:2},
+{q:"Internal CSS Tag Location ?",o:["head","body","footer","meta"],a:0},
+{q:"Text Color Property ?",o:["font-color","text-color","color","bgcolor"],a:2},
+{q:"Background Property ?",o:["background","bgcolor","background-color","color"],a:2},
+{q:"ID Selector Symbol ?",o:[".","#","*","@"],a:1},
+{q:"Font Size Property ?",o:["font-style","text-size","font-size","size"],a:2},
+{q:"Default Position Value ?",o:["absolute","fixed","static","relative"],a:2},
+{q:"Inside Border Space ?",o:["margin","padding","spacing","border"],a:1},
+{q:"CSS Comment Syntax ?",o:["// comment","<!-- comment -->","/* comment */","# comment"],a:2},
+{q:"Bold Text Property ?",o:["font-bold","weight:bold","font-weight:bold","bold"],a:2}
 ],
 
 js:[
-{q:"Assignment Operator Is _____ ?",o:["*","-","=","X"],a:2},
-{q:"Keyword For Constant Variable Is _____ ?",o:["Constant","Var","Let","Const"],a:3},
-{q:"Alert Function Syntax Is _____ ?",o:["Msg()","AlertBox()","Alert()","Console.log()"],a:2},
-{q:"10 % 3 Equals _____ ?",o:["3","1","0","3.33"],a:1},
-{q:"Power Operator Is _____ ?",o:["^","*","**","Exp"],a:2},
-{q:"++ Operator Means _____ ?",o:["Add 2","Increase By 1","Multiply By 2","Compare"],a:1},
-{q:"Loose Equality Operator Is _____ ?",o:["=","==","===","!="],a:1},
-{q:"Strict Equality Operator Is _____ ?",o:["==","!==","Equal","==="],a:3},
-{q:"5 > 10 Returns _____ ?",o:["True","False","Undefined","Null"],a:1},
-{q:"Logical AND Operator Is _____ ?",o:["&","||","&&","!"],a:2}
+{q:"Assignment Operator ?",o:["=","==","===","!="],a:0},
+{q:"Constant Keyword ?",o:["var","let","const","constant"],a:2},
+{q:"Alert Function ?",o:["msg()","alert()","prompt()","log()"],a:1},
+{q:"10 % 3 Equals ?",o:["1","0","3","2"],a:0},
+{q:"Power Operator ?",o:["^","**","*","pow"],a:1},
+{q:"++ Means ?",o:["increase by 1","increase by 2","multiply","compare"],a:0},
+{q:"Loose Equality ?",o:["=","==","===","!="],a:1},
+{q:"Strict Equality ?",o:["==","===","!=","="],a:1},
+{q:"5 > 10 Returns ?",o:["true","false","null","undefined"],a:1},
+{q:"Logical AND ?",o:["&","&&","||","!"],a:1}
 ]
 
 };
 
-const shuffle=a=>a.sort(()=>Math.random()-.5);
+/* SHUFFLE */
 
-function toggleTheme(){
-
-document.body.classList.toggle("dark");
-
-themeIcon.innerText=
-document.body.classList.contains("dark")?"☀️":"🌙";
-
+function shuffle(arr){
+return arr.sort(()=>Math.random()-.5);
 }
+
+/* HOME */
 
 function home(){
 
 app.innerHTML=`
 
-<h2 style="text-align:center;">Enter Your Name :</h2>
+<h2 align="center">Enter Your Name</h2>
 
-<br>
-
-<div style="display:flex;justify-content:center;">
-
+<div style="text-align:center">
 <input id="name" placeholder="Your name">
-
 </div>
 
 <br>
 
-<h2 style="text-align:center;">Select Topic :</h2>
-
-<br>
+<h2 align="center">Select Topic</h2>
 
 <div class="topic-list">
 
@@ -91,21 +92,139 @@ app.innerHTML=`
 <button class="primary" onclick="startQuiz('fusion')">Fusion (Mixed)</button>
 
 </div>
-
 `;
-
 }
+
+/* START QUIZ */
 
 function startQuiz(topic){
 
-userName=document.getElementById("name").value.trim()||"Guest";
+let input=document.getElementById("name");
 
-questions=
-topic==="fusion"
+userName=input.value.trim()||"Guest";
+
+questions=topic==="fusion"
 ?[...db.html.slice(0,3),
 ...db.css.slice(0,3),
 ...db.js.slice(0,4)]
 :[...db[topic]];
+
+questions=shuffle(questions);
+
+index=0;
+score=0;
+userAnswers=[];
+timeLeft=30;
+
+clearInterval(timer);
+
+timer=setInterval(()=>{
+
+timeLeft--;
+
+let t=document.getElementById("timerBox");
+
+if(t) t.textContent="Time Left: "+timeLeft+" sec";
+
+if(timeLeft<=0){
+clearInterval(timer);
+showResult();
+}
+
+},1000);
+
+showQuestion();
+}
+
+/* SHOW QUESTION */
+
+function showQuestion(){
+
+if(index>=questions.length){
+showResult();
+return;
+}
+
+let q=questions[index];
+
+app.innerHTML=`
+
+<h3>${userName} | Question ${index+1} of ${questions.length}</h3>
+
+<div class="timer" id="timerBox">
+Time Left: ${timeLeft} sec
+</div>
+
+<p>${q.q}</p>
+
+${q.o.map((v,i)=>
+`<button class="option" onclick="answer(${i})">${v}</button>`
+).join("")}
+`;
+}
+
+/* ANSWER */
+
+function answer(choice){
+
+userAnswers.push(choice);
+
+if(choice===questions[index].a) score++;
+
+index++;
+
+showQuestion();
+}
+
+/* RESULT */
+
+function showResult(){
+
+clearInterval(timer);
+
+let review="";
+
+questions.forEach((q,i)=>{
+
+let user=userAnswers[i];
+let correct=q.a;
+
+review+=`
+
+<div class="result-card">
+
+<b>Q${i+1}:</b> ${q.q}<br><br>
+
+Your Answer:
+<span class="${user===correct?"correct":"wrong"}">
+${q.o[user]||"Not Attempted"}
+</span>
+
+<br>
+
+Correct Answer:
+<span class="correct">
+${q.o[correct]}
+</span>
+
+</div>
+`;
+});
+
+app.innerHTML=`
+
+<h2>Result Summary</h2>
+
+Name: ${userName}<br>
+Score: ${score}/${questions.length}<br><br>
+
+${review}
+
+<button class="primary" onclick="home()">Restart Quiz</button>
+`;
+}
+
+home();:[...db[topic]];
 
 questions=shuffle(questions);
 
