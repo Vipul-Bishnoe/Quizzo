@@ -39,7 +39,7 @@ css:[
 {q:"Font Size Property ?",o:["font-style","text-size","font-size","size"],a:2},
 {q:"Default Position Value ?",o:["absolute","fixed","static","relative"],a:2},
 {q:"Inside Border Space ?",o:["margin","padding","spacing","border"],a:1},
-{q:"CSS Comment Syntax ?",o:["// comment","<!-- comment -->","/* comment */","# comment"],a:2},
+{q:"CSS Comment Syntax ?",o:["// comment","&lt;!-- comment --&gt;","/* comment */","# comment"],a:2},
 {q:"Bold Text Property ?",o:["font-bold","weight:bold","font-weight:bold","bold"],a:2}
 ],
 
