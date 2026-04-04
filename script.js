@@ -85,6 +85,19 @@ showQuestion();
 }
 
 function showQuestion(){
+clearInterval(timer);
+timeLeft=30;
+
+timer=setInterval(()=>{
+timeLeft--;
+document.getElementById("timerBox").innerText="Time Left: "+timeLeft+" sec";
+
+if(timeLeft<=0){
+clearInterval(timer);
+showResult();
+}
+
+},1000);
 if(index>=questions.length){clearInterval(timer);return showResult();}
 let q=questions[index],opts=shuffle([...q.o]);
 q.correctIndex=opts.indexOf(q.o[q.a]);
