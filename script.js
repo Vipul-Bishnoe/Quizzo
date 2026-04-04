@@ -22,7 +22,7 @@ css:[
 {q:"Font Size Property Is _____ ?",o:["Font-style","Text-size","Font-size","Size"],a:2},
 {q:"Default Position Value Is _____ ?",o:["Static","Relative","Absolute","Fixed"],a:0},
 {q:"Space Inside Border Is Called _____ ?",o:["Margin","Padding","Border","Spacing"],a:1},
-{q:"CSS Comment Syntax Is _____ ?",o:["// Comment","<!-- Comment -->","/* Comment */","# Comment"],a:2},
+{q:"CSS Comment Syntax Is _____ ?",o:["// Comment","&lt;!-- Comment --&gt;","/* Comment */","# Comment"],a:2},
 {q:"Bold Text Property Is _____ ?",o:["Font-bold","Text-bold","Font-weight:bold","Weight:bold"],a:2}
 ],
 js:[
