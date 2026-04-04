@@ -1,35 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Quiz Matrix</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
 
+:root{
+--bg:#eef2f7;
+--card:#ffffff;
+--text:#1f2937;
+--primary:#2563eb;
+--accent:#10b981;
+--border:#e5e7eb;
+--hover:#2563eb;
+--correct:#16a34a;
+--wrong:#dc2626;
+}
+
+body.dark{
+--bg:#0b1220;
+--card:#111827;
+--text:#f1f5f9;
+--primary:#3b82f6;
+--border:#334155;
+}
+
+body{
+margin:0;
+font-family:Segoe UI,sans-serif;
+background:var(--bg);
+color:var(--text);
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px 40px;
+background:var(--primary);
+color:#fff;
+}
+
+.theme-btn{
+background:white;
+border:none;
+padding:6px 12px;
+border-radius:8px;
+cursor:pointer;
+}
+
+main{
+flex:1;
+width:90%;
+max-width:1000px;
+margin:auto;
+padding:40px 10px;
+}
+
+.option{
+width:100%;
+padding:14px;
+margin:6px 0;
+border-radius:8px;
+border:1px solid var(--border);
+background:var(--card);
+cursor:pointer;
+}
+
+.option:hover{
+background:var(--hover);
+color:white;
+}
+
+.primary{
+background:var(--primary);
+color:white;
+padding:12px 18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.result-card{
+border:1px solid var(--border);
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+background:var(--card);
+}
+
+.correct{color:var(--correct);font-weight:bold;}
+.wrong{color:var(--wrong);font-weight:bold;}
+
+footer{
+text-align:center;
+padding:15px;
+border-top:1px solid var(--border);
+}
+
+</style>
 </head>
 
 <body>
 
 <header>
-
 <h2>Quiz Matrix</h2>
-
-<button class="theme-btn" onclick="toggleTheme()" id="themeIcon">
-🌙
-</button>
-
+<button class="theme-btn" id="themeBtn">🌙</button>
 </header>
 
 <main id="app"></main>
 
-<footer>
-© 2026 Vipul Bishnoi
-</footer>
+<footer>© 2026 Vipul Bishnoi</footer>
 
-<script src="script.js"></script>
+<script>
+
+const app=document.getElementById("app");
+const themeBtn=document.getElementById("themeBtn");
+
+themeBtn.onclick=()=>{
+document.body.classList.toggle("dark");
+themeBtn.textContent=
+document.body.classList.contains("dark")?"☀️":"🌙";
+};
+
+let userName="";
+let questions=[];
+let index=0;
+let score=0;
+let timer;
+let timeLeft=30;
+let userAnswers=[];
+
+const db={
+html:[
+{q:"HTML Stands For ?",o:["HyperText Machine Language","HyperText Markup Language","HyperText Marking Language","HighText Marking Language"],a:1},
+{q:"Closing Tag Symbol Is ?",o:["!","\\","/","."],a:2}
+],
+css:[
+{q:"CSS Stands For ?",o:["Computer Style Sheets","Creative Style Sheets","Cascading Style Sheets","Colorful Style Sheets"],a:2},
+{q:"CSS Comment Syntax ?",o:["// Comment","<!-- Comment -->","/* Comment */","# Comment"],a:2}
+],
+js:[
+{q:"Assignment Operator ?",o:["*","-","=","X"],a:2},
+{q:"Const Keyword ?",o:["Constant","Var","Let","Const"],a:3}
+]
+};
+
+function shuffle(a){
+return a.sort(()=>Math.random()-.5);
+}
+
+function home(){
+app.innerHTML=`
+<h2 align=center>Enter Your Name</h2>
+<div style="text-align:center">
+<input id="name" placeholder="Your name">
+</div>
+
+<br>
+
+<h2 align=center>Select Topic</h2>
+
+<div style="text-align:center">
+
+<button class="primary" onclick="startQuiz('html')">HTML</button>
+<button class="primary" onclick="startQuiz('css')">CSS</button>
+<button class="primary" onclick="startQuiz('js')">JavaScript</button>
+
+</div>
+`;
+}
+
+function startQuiz(topic){
+
+const nameInput=document.getElementById("name");
+userName=nameInput?nameInput.value.trim():"";
+
+if(!userName) userName="Guest";
+
+questions=shuffle([...db[topic]]);
+
+index=0;
+score=0;
+userAnswers=[];
+timeLeft=30;
+
+clearInterval(timer);
+
+timer=setInterval(()=>{
+timeLeft--;
+const t=document.getElementById("timerBox");
+if(t) t.textContent="Time Left: "+timeLeft+" sec";
+if(timeLeft<=0){
+clearInterval(timer);
+showResult();
+}
+},1000);
+
+showQuestion();
+}
+
+function showQuestion(){
+
+if(index>=questions.length){
+showResult();
+return;
+}
+
+let q=questions[index];
+
+app.innerHTML=`
+<h3>${userName} | Question ${index+1}</h3>
+
+<div id="timerBox">
+Time Left: ${timeLeft} sec
+</div>
+
+<p>${q.q}</p>
+
+${q.o.map((v,i)=>
+`<button class="option" onclick="answer(${i})">${v}</button>`
+).join("")}
+`;
+}
+
+function answer(choice){
+
+userAnswers.push(choice);
+
+if(choice===questions[index].a) score++;
+
+index++;
+
+showQuestion();
+}
+
+function showResult(){
+
+clearInterval(timer);
+
+let review="";
+
+questions.forEach((q,i)=>{
+
+let user=userAnswers[i];
+let correct=q.a;
+
+review+=`
+<div class="result-card">
+
+<b>Q${i+1}:</b> ${q.q}<br><br>
+
+Your Answer:
+<span class="${user===correct?"correct":"wrong"}">
+${q.o[user]||"Not Attempted"}
+</span>
+
+<br>
+
+Correct Answer:
+<span class="correct">
+${q.o[correct]}
+</span>
+
+</div>
+`;
+});
+
+app.innerHTML=`
+
+<h2>Result Summary</h2>
+
+Name: ${userName}<br>
+Score: ${score}/${questions.length}<br><br>
+
+${review}
+
+<button class="primary" onclick="home()">Restart</button>
+`;
+}
+
+home();
+
+</script>
 
 </body>
 </html>
