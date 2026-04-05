@@ -12,10 +12,11 @@
 
 body.dark{
 --bg:#0b1220;
---card:#111827;
+--card:#1f2937;
 --text:#f1f5f9;
 --primary:#3b82f6;
 --border:#334155;
+--hover:#475569;
 }
 
 body{
@@ -40,6 +41,7 @@ color:white;
 header h2{
 margin:0;
 font-size:20px;
+cursor:pointer;
 }
 
 .theme-btn{
@@ -86,6 +88,7 @@ border:1px solid var(--border);
 background:var(--card);
 cursor:pointer;
 font-size:15px;
+transition:.15s;
 }
 
 .option:hover{
